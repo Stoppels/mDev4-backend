@@ -12,6 +12,7 @@ var groups = require('./routes/groups');
 var users = require('./routes/users');
 var students = require('./routes/students');
 var announcements = require('./routes/announcements');
+var tests = require('./routes/tests');
 var settings = require('./routes/settings');
 
 var app = express();
@@ -39,6 +40,7 @@ app.use('/groups', groups);
 app.use('/users', users);
 app.use('/students', students);
 app.use('/announcements', announcements);
+app.use('/tests', tests);
 app.use('/settings', settings);
 
 /// catch 404 and forward to error handler

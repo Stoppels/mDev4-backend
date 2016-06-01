@@ -19,7 +19,10 @@ router.get('/', function(req, res) {
 	var TYPES = require('tedious').TYPES;
 
 	function executeStatement() {
-	    request = new Request("SELECT * FROM [LVS].[Announcement]", function(err) {
+	    request = new Request(`SELECT [LVS].[Announcement].*, [LVS].[User].first_name, [LVS].[User].last_name 
+									FROM [LVS].[Announcement]
+									LEFT JOIN [LVS].[User] ON [LVS].[Announcement].author = [LVS].[User].id
+	    						`, function(err) {
 	        if (err) {
 	            console.log("err: " + err);}
 	    });
@@ -30,30 +33,36 @@ router.get('/', function(req, res) {
 			
 	    	request.on('row', function(columns) {
 
-	    		var group = {};
+	    		var announcement = {};
 
 		        columns
 		        	.map(function(row) {
 
 		        		switch(row.metadata.colName) {
 						    case "id":
-						        group.id = row.value;
+						        announcement.id = row.value;
 						        break;
 						    case "message":
-						        group.message = row.value;
+						        announcement.message = row.value;
 						        break;
 					        case "author":
-						        group.author = row.value;
+						        announcement.author = row.value;
 						        break;
 					        case "title":
-						        group.title = row.value;
+						        announcement.title = row.value;
 						        break;
 					        case "type":
-						        group.type = row.value;
-						        resultTotal.push(group);
+						        announcement.type = row.value;
+						        break;
+					        case "first_name":
+					        	announcement.first_name = row.value;
+					        	break;
+				        	case "last_name":
+				        		announcement.last_name = row.value;
+						        resultTotal.push(announcement);
 						        break;
 						    default:
-						        group.error = row.value;
+						        announcement.error = row.value;
 						}
 		        		
 			    	});
